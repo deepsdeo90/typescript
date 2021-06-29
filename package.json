@@ -1,0 +1,26 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "description": "drag and drop a typescript project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepsdeo90/typescript.git"
+  },
+  "keywords": [
+    "typescript"
+  ],
+  "author": "dipali",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deepsdeo90/typescript/issues"
+  },
+  "homepage": "https://github.com/deepsdeo90/typescript#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
