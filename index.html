@@ -5,9 +5,59 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drap and Drop- A Typescript Project</title>
+    <link rel="stylesheet" href="app.css">
     <script src="app.js"></script>
 </head>
 <body>
-    
+    <div id="project">
+        <form>
+            <div class="well-form">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" />
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                </div>
+                <div>
+                    <label for="people">People</label>
+                    <input type="number" name="people" id="people" max="10" min="1" />
+                </div>
+                <div>
+                    <button type="submit">ADD PROJECT</button>
+                </div>
+            </div>
+        </form>
+        <div class="well">
+            <h1 class="red">ACTIVE PROJECTS</h1>
+            <div class="card">
+                <header>IMPROVE EFFICIENCY WHILE </header>
+                <div class="person">5 person injured</div>
+                <div class="description">lorem ipsum descriptio</div>
+            </div>
+
+            <div class="card">
+                <header>IMPROVE EFFICIENCY WHILE </header>
+                <div class="person">5 person injured</div>
+                <div class="description">lorem ipsum descriptio</div>
+            </div>
+        </div>
+        <div class="well">
+            <h1 class="blue">FINISHED PROJECTS</h1>
+            <div class="card">
+                <header>IMPROVE EFFICIENCY WHILE </header>
+                <div class="person">5 person injured</div>
+                <div class="description">lorem ipsum descriptio</div>
+            </div>
+
+            <div class="card">
+                <header>IMPROVE EFFICIENCY WHILE </header>
+                <div class="person">5 person injured</div>
+                <div class="description">lorem ipsum descriptio</div>
+            </div>
+        </div>
+    </div>
+    <div id="app"></div>
 </body>
 </html>
