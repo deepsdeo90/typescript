@@ -41,10 +41,28 @@ class ProjectInput {
         this.hostElement.insertAdjacentElement('afterbegin', this.element);
     }
 
+    private gatherUserInput(): [string, string, number] | void {
+        const enteredtitle = this.titleInputElement.value;
+        const entereddescription = this.descriptionInputElement.value;
+        const enteredpeople = this.peopleInputElement.value;
+        
+        if(enteredtitle.trim().length == 0 || entereddescription.trim().length == 0 || enteredpeople.trim().length == 0){
+            alert("Invalid Input!!");
+            return;
+        }else{
+            return [enteredtitle, entereddescription, +enteredpeople];
+        }
+        
+    }
     @autobind
     private submitHandler(event:Event){
         event.preventDefault();
-        console.log(this.titleInputElement.value);
+        const userInput = this.gatherUserInput();
+        if(Array.isArray(userInput)){
+            const [title, description, people] = userInput;
+            console.log(title+" "+description+" "+people);
+        }
+        
     }
 
     private configure(){

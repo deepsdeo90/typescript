@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 function autobind(target, methodName, descriptor) {
-    console.log("inside autobind");
     const originalMethod = descriptor.value;
     const adjDescriptor = {
         configurable: true,
@@ -35,9 +34,25 @@ class ProjectInput {
     attach() {
         this.hostElement.insertAdjacentElement('afterbegin', this.element);
     }
+    gatherUserInput() {
+        const enteredtitle = this.titleInputElement.value;
+        const entereddescription = this.descriptionInputElement.value;
+        const enteredpeople = this.peopleInputElement.value;
+        if (enteredtitle.trim().length == 0 || entereddescription.trim().length == 0 || enteredpeople.trim().length == 0) {
+            alert("Invalid Input!!");
+            return;
+        }
+        else {
+            return [enteredtitle, entereddescription, +enteredpeople];
+        }
+    }
     submitHandler(event) {
         event.preventDefault();
-        console.log(this.titleInputElement.value);
+        const userInput = this.gatherUserInput();
+        if (Array.isArray(userInput)) {
+            const [title, description, people] = userInput;
+            console.log(title + " " + description + " " + people);
+        }
     }
     configure() {
         this.element.addEventListener('submit', this.submitHandler);
