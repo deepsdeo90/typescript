@@ -19,6 +19,25 @@ function autobind(target, methodName, descriptor) {
     };
     return adjDescriptor;
 }
+function validate(validateInput) {
+    let isValid = true;
+    if (validateInput.required) {
+        isValid = isValid && validateInput.value.toString().trim().length > 0;
+    }
+    if (validateInput.minLength != null && typeof validateInput.value === 'string') {
+        isValid = isValid && validateInput.value.length > validateInput.minLength;
+    }
+    if (validateInput.maxLength != null && typeof validateInput.value === 'string') {
+        isValid = isValid && validateInput.value.length < validateInput.maxLength;
+    }
+    if (validateInput.min != null && typeof validateInput.value === 'number') {
+        isValid = isValid && validateInput.value > validateInput.min;
+    }
+    if (validateInput.max != null && typeof validateInput.value === 'number') {
+        isValid = isValid && validateInput.value < validateInput.max;
+    }
+    return isValid;
+}
 class ProjectInput {
     constructor() {
         this.templateElement = document.getElementById("project");
@@ -38,7 +57,26 @@ class ProjectInput {
         const enteredtitle = this.titleInputElement.value;
         const entereddescription = this.descriptionInputElement.value;
         const enteredpeople = this.peopleInputElement.value;
-        if (enteredtitle.trim().length == 0 || entereddescription.trim().length == 0 || enteredpeople.trim().length == 0) {
+        const validationRuleForTitle = {
+            value: enteredtitle,
+            required: true,
+            minLength: 5,
+            maxLength: 15
+        };
+        const validationRuleForDescription = {
+            value: entereddescription,
+            required: true,
+            minLength: 5,
+            maxLength: 100
+        };
+        const validationRuleForPeople = {
+            value: enteredpeople,
+            required: true,
+            min: 1,
+            max: 11
+        };
+        const isValid = validate(validationRuleForTitle) && validate(validationRuleForDescription) && validate(validationRuleForPeople);
+        if (!isValid) {
             alert("Invalid Input!!");
             return;
         }
@@ -46,12 +84,18 @@ class ProjectInput {
             return [enteredtitle, entereddescription, +enteredpeople];
         }
     }
+    clearInput() {
+        this.titleInputElement.value = '';
+        this.descriptionInputElement.value = '';
+        this.peopleInputElement.value = '';
+    }
     submitHandler(event) {
         event.preventDefault();
         const userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             const [title, description, people] = userInput;
             console.log(title + " " + description + " " + people);
+            this.clearInput();
         }
     }
     configure() {
