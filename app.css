@@ -70,10 +70,10 @@ input[type=text], input[type=number],textarea {
  .description{
 
  }
- .red{
+ #active-projects h1{
     background-color: #F14F2C;
    
  }
- .blue{
+ #finished-projects h1{
     background-color:#2C7AF1;
  }

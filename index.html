@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drap and Drop- A Typescript Project</title>
     <link rel="stylesheet" href="app.css">
-    <script type="module" src="app.js"></script>
 </head>
 <body>
     <template id="project">
@@ -29,8 +28,9 @@
                 </div>
             </div>
         </form>
-        <div class="well">
-            <h1 class="red">ACTIVE PROJECTS</h1>
+    </template>
+        <template id="project-list" class="well">
+            <!--<h1 class="red">ACTIVE PROJECTS</h1>
             <div class="card">
                 <header>IMPROVE EFFICIENCY WHILE </header>
                 <div class="person">5 person injured</div>
@@ -41,9 +41,13 @@
                 <header>IMPROVE EFFICIENCY WHILE </header>
                 <div class="person">5 person injured</div>
                 <div class="description">lorem ipsum descriptio</div>
+            </div> -->
+            <div class="well">
+                <h1></h1>
+                
             </div>
-        </div>
-        <div class="well">
+        </template>
+        <!--<div class="well">
             <h1 class="blue">FINISHED PROJECTS</h1>
             <div class="card">
                 <header>IMPROVE EFFICIENCY WHILE </header>
@@ -56,8 +60,9 @@
                 <div class="person">5 person injured</div>
                 <div class="description">lorem ipsum descriptio</div>
             </div>
-        </div>
-    </template>
+        </div>-->
+   
     <div id="app"></div>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

@@ -8,6 +8,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+class ProjectState {
+    constructor() {
+        this.projects = [];
+        this.listener = [];
+    }
+    addProject(title, description, people) {
+        const newProject = {
+            id: Math.random().toString(),
+            title: title,
+            description: description,
+            people: people
+        };
+        this.projects.push(newProject);
+        for (const listenerFn of this.listener) {
+            listenerFn(this.projects.slice());
+        }
+    }
+    static getInstance() {
+        if (this.instance) {
+            return this.instance;
+        }
+        this.instance = new ProjectState();
+        return this.instance;
+    }
+    addListener(listenerFn) {
+        this.listener.push(listenerFn);
+    }
+}
+const projectState = ProjectState.getInstance();
 function autobind(target, methodName, descriptor) {
     const originalMethod = descriptor.value;
     const adjDescriptor = {
@@ -37,6 +66,48 @@ function validate(validateInput) {
         isValid = isValid && validateInput.value < validateInput.max;
     }
     return isValid;
+}
+class ProjectList {
+    constructor(type) {
+        this.type = type;
+        this.templateElement = document.getElementById("project-list");
+        this.hostElement = document.getElementById("app");
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.assignedProjects = [];
+        this.element.id = `${this.type}-projects`;
+        projectState.addListener((projects) => {
+            this.assignedProjects = projects;
+            this.renderProjects();
+        });
+        this.attach();
+        this.renderContent();
+    }
+    renderProjects() {
+        const listEl = document.getElementById(`${this.type}-projects`);
+        for (const projectItem of this.assignedProjects) {
+            const header = document.createElement('header');
+            header.innerText = projectItem.title;
+            const peopleDiv = document.createElement('div');
+            peopleDiv.className = 'people';
+            peopleDiv.innerText = projectItem.people;
+            const descDiv = document.createElement('div');
+            descDiv.className = 'description';
+            descDiv.innerText = projectItem.description;
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.appendChild(header);
+            cardDiv.appendChild(peopleDiv);
+            cardDiv.appendChild(descDiv);
+            listEl === null || listEl === void 0 ? void 0 : listEl.appendChild(cardDiv);
+        }
+    }
+    renderContent() {
+        this.element.querySelector('h1').textContent = this.type.toUpperCase() + ' PROJECTS';
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
 }
 class ProjectInput {
     constructor() {
@@ -95,6 +166,7 @@ class ProjectInput {
         if (Array.isArray(userInput)) {
             const [title, description, people] = userInput;
             console.log(title + " " + description + " " + people);
+            projectState.addProject(title, description, people);
             this.clearInput();
         }
     }
@@ -109,3 +181,5 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectInput.prototype, "submitHandler", null);
 const projectInput = new ProjectInput();
+const activeProjectList = new ProjectList('active');
+const finishedProjectList = new ProjectList('finished');
