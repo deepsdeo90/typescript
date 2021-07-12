@@ -40,11 +40,18 @@ input[type=text], input[type=number],textarea {
     background-color: #45a049;
   }
   
-  .well h1 {
+   h1 {
     color: white;
     margin: 0;
     padding: 10px;
-}
+  }
+  .active-header{
+    background-color: #F14F2C;
+  }
+  .finished-header{
+    background-color:#2C7AF1;
+  }
+
 .card {
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
     transition: 0.3s;
@@ -69,11 +76,4 @@ input[type=text], input[type=number],textarea {
  }
  .description{
 
- }
- #active-projects h1{
-    background-color: #F14F2C;
-   
- }
- #finished-projects h1{
-    background-color:#2C7AF1;
  }
