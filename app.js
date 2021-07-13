@@ -38,6 +38,16 @@ class ProjectState extends State {
     addProject(title, description, people) {
         const newProject = new Project(Math.random.toString(), title, description, people, ProjectStatus.Active);
         this.projects.push(newProject);
+        this.updateListeners();
+    }
+    moveProject(projectId, newStatus) {
+        const project = this.projects.find(prj => prj.id == projectId);
+        if (project && project.status != newStatus) {
+            project.status = newStatus;
+            this.updateListeners();
+        }
+    }
+    updateListeners() {
         for (const listenerFn of this.listener) {
             listenerFn(this.projects.slice());
         }
@@ -102,33 +112,45 @@ class ProjectItem extends Component {
     constructor(hostId, project) {
         super('single-project', hostId, false, project.id);
         this.project = project;
-        /*
-                const header = document.createElement('header');
-                          header.innerText = projectItem.title;
-                    const peopleDiv = document.createElement('div');
-                          peopleDiv.className = 'people';
-                          peopleDiv.innerText = projectItem.people.toString();
-                    const descDiv = document.createElement('div');
-                          descDiv.className = 'description';
-                          descDiv.innerText = projectItem.description;
-        
-                    const cardDiv = document.createElement('div');
-                          cardDiv.className = 'card';
-                          cardDiv.appendChild(header);
-                          cardDiv.appendChild(peopleDiv);
-                          cardDiv.appendChild(descDiv);
-        
-                    listEl?.append(cardDiv);*/
         this.rendercontent();
+        this.configure();
+    }
+    get persons() {
+        if (this.project.people === 1) {
+            return '1 person';
+        }
+        else {
+            return `${this.project.people} persons`;
+        }
+    }
+    dragStartHandler(event) {
+        event.dataTransfer.setData('text/plain', this.project.id);
+        event.dataTransfer.dropEffect = 'move';
+    }
+    dragEndHandler(_) {
     }
     rendercontent() {
         this.divElement.querySelector("header").textContent = this.project.title;
-        this.divElement.querySelector("h3").textContent = this.project.people.toString();
+        this.divElement.querySelector("h3").textContent = this.persons + ' assigned';
         this.divElement.querySelector("div").textContent = this.project.description;
     }
     configure() {
+        this.divElement.addEventListener('dragstart', this.dragStartHandler);
+        this.divElement.addEventListener('dragend', this.dragEndHandler);
     }
 }
+__decorate([
+    autobind,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [DragEvent]),
+    __metadata("design:returntype", void 0)
+], ProjectItem.prototype, "dragStartHandler", null);
+__decorate([
+    autobind,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [DragEvent]),
+    __metadata("design:returntype", void 0)
+], ProjectItem.prototype, "dragEndHandler", null);
 class ProjectList extends Component {
     constructor(type) {
         super("project-list", "app", false, `${type}-projects-list`);
@@ -137,20 +159,32 @@ class ProjectList extends Component {
         this.rendercontent();
         this.configure();
     }
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+            const list = this.divElement.querySelector('div');
+            list.classList.add('droppable');
+        }
+    }
+    dropHandler(event) {
+        const prjId = event.dataTransfer.getData('text/plain');
+        projectState.moveProject(prjId, this.type == 'active' ? ProjectStatus.Active : ProjectStatus.Finished);
+    }
+    dragLeaveHandler(event) {
+        event.preventDefault();
+        const list = this.divElement.querySelector('div');
+        list.classList.remove('droppable');
+    }
     rendercontent() {
         const listId = `${this.type}-projects`;
         this.divElement.querySelector('div').id = listId;
         this.divElement.querySelector('h1').textContent = this.type.toUpperCase() + ' PROJECTS';
         this.divElement.querySelector('h1').className = this.type + '-header';
-        /* const headerElement = document.getElementById(`${this.type}-projects`)?.getElementsByTagName("h1")[0];
-         console.log(document.getElementById(`${this.type}-projects`));
-         
-         if(headerElement){
-             headerElement.className = this.type+'-header';
-             headerElement.innerText = this.type.toUpperCase() + ' PROJECTS';
-         }*/
     }
     configure() {
+        this.divElement.addEventListener('dragover', this.dragOverHandler);
+        this.divElement.addEventListener('dragleave', this.dragLeaveHandler);
+        this.divElement.addEventListener('drop', this.dropHandler);
         projectState.addListener((projects) => {
             const releventProject = projects.filter(prj => {
                 if (this.type === 'active') {
@@ -166,27 +200,28 @@ class ProjectList extends Component {
         const listEl = document.getElementById(`${this.type}-projects`);
         listEl.innerHTML = "";
         for (const projectItem of this.assignedProjects) {
-            console.log(this.divElement.querySelector('div'));
             new ProjectItem(this.divElement.querySelector('div').id, projectItem);
-            /*const header = document.createElement('header');
-                  header.innerText = projectItem.title;
-            const peopleDiv = document.createElement('div');
-                  peopleDiv.className = 'people';
-                  peopleDiv.innerText = projectItem.people.toString();
-            const descDiv = document.createElement('div');
-                  descDiv.className = 'description';
-                  descDiv.innerText = projectItem.description;
-
-            const cardDiv = document.createElement('div');
-                  cardDiv.className = 'card';
-                  cardDiv.appendChild(header);
-                  cardDiv.appendChild(peopleDiv);
-                  cardDiv.appendChild(descDiv);
-
-            listEl?.append(cardDiv);*/
         }
     }
 }
+__decorate([
+    autobind,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [DragEvent]),
+    __metadata("design:returntype", void 0)
+], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    autobind,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [DragEvent]),
+    __metadata("design:returntype", void 0)
+], ProjectList.prototype, "dropHandler", null);
+__decorate([
+    autobind,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [DragEvent]),
+    __metadata("design:returntype", void 0)
+], ProjectList.prototype, "dragLeaveHandler", null);
 class ProjectInput extends Component {
     constructor() {
         super("project", "app", true);

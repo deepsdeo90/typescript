@@ -55,11 +55,12 @@ input[type=text], input[type=number],textarea {
 .card {
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
     transition: 0.3s;
-    width: 85%;
+    width: 97%;
     padding: 12x;
-    margin: 5%;
+    margin-bottom: 10px;
     padding: 2%;
     font-size: 20px;
+    background-color: white;
   }
   
   .card:hover {
@@ -74,6 +75,17 @@ input[type=text], input[type=number],textarea {
     margin-bottom: 10px;
     font-weight: bold;
  }
- .description{
-
+ #active-projects, #finished-projects{
+   padding: 5%;
  }
+ 
+ .droppable{
+  background-color: #ffcc99;
+}
+ #active-projects-list .droppable{
+   background-color: #ffcc99;
+ }
+
+ #finished-projects-list .droppable{
+  background-color: #66ccff;
+}
