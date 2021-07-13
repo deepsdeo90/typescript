@@ -117,11 +117,32 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement>{
     abstract rendercontent(): void;
     abstract configure(): void;
 }
+
+class ProjectItem extends Component<HTMLTemplateElement, HTMLDivElement>{
+
+    private project: Project;
+
+    constructor(hostId: string, project: Project){
+        super('single-project',hostId, false, project.id);
+        this.project = project;
+        this.rendercontent();
+    }
+    public rendercontent(): void {
+        this.divElement.querySelector("header")!.textContent = this.project.title;
+        this.divElement.querySelector("h3")!.textContent = this.project.people.toString();
+        this.divElement.querySelector("div")!.textContent = this.project.description;
+
+    }
+
+    public configure(): void{
+
+    }
+}
 class ProjectList extends Component<HTMLDivElement, HTMLDivElement> {
     assignedProjects: Project[];
 
     constructor( private type: 'active' | 'finished' ){
-        super("project-list","app",false,`${type}-projects`);
+        super("project-list","app",false,`${type}-projects-list`);
         this.assignedProjects = [];
         
         this.rendercontent();
@@ -129,13 +150,19 @@ class ProjectList extends Component<HTMLDivElement, HTMLDivElement> {
     }
 
     public rendercontent(): void {
-        const headerElement = document.getElementById(`${this.type}-projects`)?.getElementsByTagName("h1")[0];
+        const listId = `${this.type}-projects`;
+            this.divElement.querySelector('div')!.id = listId;
+            this.divElement.querySelector('h1')!.textContent = this.type.toUpperCase() + ' PROJECTS';
+            this.divElement.querySelector('h1')!.className = this.type+'-header';
+  
+
+       /* const headerElement = document.getElementById(`${this.type}-projects`)?.getElementsByTagName("h1")[0];
         console.log(document.getElementById(`${this.type}-projects`));
         
         if(headerElement){
             headerElement.className = this.type+'-header';
             headerElement.innerText = this.type.toUpperCase() + ' PROJECTS';
-        }
+        }*/
       }
 
       public configure(){
@@ -151,10 +178,12 @@ class ProjectList extends Component<HTMLDivElement, HTMLDivElement> {
         });
       }
     private renderProjects(){
-        const listEl = document.getElementById(`${this.type}-projects`)?.getElementsByTagName("div")[0];;
+        const listEl = document.getElementById(`${this.type}-projects`);
         listEl!.innerHTML = "";
         for(const projectItem of this.assignedProjects){
-            const header = document.createElement('header');
+            console.log(this.divElement.querySelector('div'));
+            new ProjectItem(this.divElement.querySelector('div')!.id, projectItem);
+            /*const header = document.createElement('header');
                   header.innerText = projectItem.title;
             const peopleDiv = document.createElement('div');
                   peopleDiv.className = 'people';
@@ -169,7 +198,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLDivElement> {
                   cardDiv.appendChild(peopleDiv);
                   cardDiv.appendChild(descDiv);
 
-            listEl?.append(cardDiv);
+            listEl?.append(cardDiv);*/
         }
     }
 }
@@ -241,7 +270,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
         const userInput = this.gatherUserInput();
         if(Array.isArray(userInput)){
             const [title, description, people] = userInput;
-            console.log(title+" "+description+" "+people);
             projectState.addProject(title, description, people);
             this.clearInput();
         }
